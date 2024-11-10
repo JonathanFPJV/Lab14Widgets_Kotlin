@@ -2,6 +2,7 @@ package com.example.lab14widgets
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.copy
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,39 +31,59 @@ import androidx.navigation.NavController
 
 
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
+
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Configuraciones") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Default.ArrowBack, "Regresar")
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp)
-        ) {
+    var isDarkMode by remember { mutableStateOf(false) }
 
-            // Aquí irían las opciones de configuración
-            var isDarkMode by remember { mutableStateOf(false) }
-            Text("Configuraciones de la Aplicación")
-            SettingsItem(
-                title = "Modo oscuro",
-                isChecked = isDarkMode,
-                onCheckedChange = { isDarkMode = it }
-            )
+    // Define el esquema de colores según el estado del modo oscuro
+    val colors = if (isDarkMode) darkColorScheme() else lightColorScheme()
+
+    // Fondo animado al cambiar el modo
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isDarkMode) Color.Black else Color.White
+    )
+
+    MaterialTheme(colorScheme = colors) { // Cambia el tema de la app dinámicamente
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Configuraciones") },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.navigateUp() }) {
+                            Icon(Icons.Default.ArrowBack, "Regresar")
+                        }
+                    }
+                )
+            }
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(backgroundColor) // Usa el color de fondo animado
+                    .padding(paddingValues)
+                    .padding(16.dp)
+            ) {
+                Text("Configuraciones de la Aplicación")
+                SettingsItem(
+                    title = "Modo oscuro",
+                    isChecked = isDarkMode,
+                    onCheckedChange = { isDarkMode = it }
+                )
+            }
         }
     }
 }
+
 @Composable
 fun SettingsItem(
     title: String,
