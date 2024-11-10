@@ -10,10 +10,28 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+
+@Composable
+fun AppNavigation() {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "home") {
+        composable("home") {
+            WidgetHomeScreen(navController = navController)
+        }
+        composable("settings") {
+            SettingsScreen(navController = navController)
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WidgetHomeScreen() {
+fun WidgetHomeScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
@@ -24,7 +42,7 @@ fun WidgetHomeScreen() {
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 actions = {
-                    IconButton(onClick = { /* TODO: Implementar ajustes */ }) {
+                    IconButton(onClick = {navController.navigate("settings")}) {
                         Icon(
                             Icons.Default.Settings,
                             contentDescription = "Ajustes",

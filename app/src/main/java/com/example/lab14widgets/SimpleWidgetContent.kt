@@ -44,6 +44,12 @@ class SimpleWidgetContent : GlanceAppWidget() {
                     onClick = actionStartActivity<MainActivity>()
                 )
 
+                Button(
+                    text = "Configuraciones",
+                    onClick = actionStartActivity<SettingsActivity>()
+
+                )
+
             }
         }
     }
